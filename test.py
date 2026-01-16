@@ -1,18 +1,27 @@
 import time
 import sys
+import os
 
-# ===== KLEUREN =====
-GREEN = "\033[92m"
+# ===== KLEUR =====
 RED = "\033[91m"
 RESET = "\033[0m"
 
-def typewriter(text, delay=0.05, color=GREEN):
-    sys.stdout.write(color)
+def clear_screen():
+    os.system("cls" if os.name == "nt" else "clear")
+
+def typewriter(text, delay=0.05, color=None):
+    if color:
+        sys.stdout.write(color)
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()
         time.sleep(delay)
-    sys.stdout.write(RESET + "\n")
+    if color:
+        sys.stdout.write(RESET)
+    print()
+
+# ===== START =====
+clear_screen()
 
 # ===== START WACHTWOORD (ONBEPERKT) =====
 while True:
@@ -20,6 +29,7 @@ while True:
     wachtwoord = input("> ")
 
     if wachtwoord == "1908":
+        clear_screen()
         typewriter("Het wachtwoord is correct!\n")
         break
     else:
@@ -29,12 +39,12 @@ while True:
 vragen = [
     {
         "vraag": "Vraag 1: Hoeveel meer radioactieve straling was er bij de superwolven dan wat volgens de menselijke veiligheidslimiet mag?",
-        "antwoorden": ["6 keer", "6x", "zes keer"],
+        "antwoorden": ["6 keer", "6", "zes keer"],
         "hint": "Het is een enkel cijfer, en best een klein getal."
     },
     {
         "vraag": "Vraag 2: Hoeveel ton woog de deksel die werd weggeblazen door de stoomexplosie?",
-        "antwoorden": ["1000 ton", "1000ton", "duizend ton"],
+        "antwoorden": ["1000 ton", "1000ton", "duizend ton", "1000"],
         "hint": "Het is in tonnen uitgedrukt, niet in kilo’s."
     },
     {
@@ -44,7 +54,7 @@ vragen = [
     },
     {
         "vraag": "Vraag 4: Hoe groot was de vervreemdingszone rond de kerncentrale?",
-        "antwoorden": ["30 km", "30km", "dertig km"],
+        "antwoorden": ["30 km", "30km", "dertig km", "30 kilometer"],
         "hint": "Het aantal is kleiner dan 50, een mooi rond getal."
     }
 ]
@@ -59,6 +69,7 @@ def vraag_stel(vraag, antwoorden, hint):
         respons = input("antwoord: ").strip().lower()
 
         if respons in antwoorden:
+            clear_screen()
             typewriter("Correct! ✅")
             return
         else:
@@ -72,12 +83,14 @@ def main():
     for v in vragen:
         vraag_stel(v["vraag"], v["antwoorden"], v["hint"])
 
-    typewriter("\nAlle vragen beantwoord!")
+    clear_screen()
+    typewriter("Alle vragen beantwoord!")
     typewriter("Voer het eindwachtwoord in:")
 
     while True:
         laatste = input("> ")
         if laatste == "9128":
+            clear_screen()
             typewriter("Eindwachtwoord correct! Je hebt het gehaald!", 0.06)
             break
         else:
