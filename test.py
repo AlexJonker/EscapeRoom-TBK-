@@ -51,7 +51,7 @@ def mooie_progress_bar():
         print(f'\r[{bar}] {percent:.1f}%', end='', flush=True)
         time.sleep(0.1)
 
-    print("\nGevalideerd")
+    print("\n")
     input_toegestaan = True
 
 # ===== START =====
@@ -59,16 +59,18 @@ clear_screen()
 
 # ===== START WACHTWOORD =====
 while True:
+    time.sleep(0.8)
+    clear_screen()
     typewriter("Wachtwoord:", 0.07)
     wachtwoord = veilige_input("> ")
     mooie_progress_bar()
 
-    if wachtwoord == "1908":
+    if wachtwoord == "120122":
         clear_screen()
-        typewriter("Het wachtwoord is correct!\n")
+        typewriter("Wachtwoord is gevalideerd ✅\n")
         break
     else:
-        typewriter("Onjuist wachtwoord.\n", color=RED)
+        typewriter("Onjuist wachtwoord ❌\n", color=RED)
 
 # ===== VRAGEN =====
 vragen = [
@@ -91,7 +93,12 @@ vragen = [
         "vraag": "Vraag 4: Hoe groot was de vervreemdingszone rond de kerncentrale?",
         "antwoorden": ["30 km", "30km", "dertig km", "30 kilometer"],
         "hint": "Het aantal is kleiner dan 50, een mooi rond getal."
-    }
+    },
+    {
+        "vraag": "Vraag 5: Zoek de letters met de blacklight en vorm een woord",
+        "antwoorden": ["Uranium"],
+        "hint": "De vierde letter is n."
+    },
 ]
 
 def vraag_stel(vraag, antwoorden, hint):
@@ -108,7 +115,7 @@ def vraag_stel(vraag, antwoorden, hint):
             return
         else:
             fouten += 1
-            typewriter("Fout antwoord.", color=RED)
+            typewriter("Fout antwoord ❌", color=RED)
 
             if fouten == 3:
                 typewriter(f"Hint: {hint}")
@@ -119,16 +126,8 @@ def main():
         vraag_stel(v["vraag"], v["antwoorden"], v["hint"])
 
     clear_screen()
-    typewriter("Alle vragen beantwoord!")
-    typewriter("Voer het eindwachtwoord in:")
-
-    while True:
-        laatste = veilige_input("> ")
-        if laatste == "9128":
-            clear_screen()
-            typewriter("Wachtwoord correct", 0.06)
-            break
-        else:
-            typewriter("Onjuist wachtwoord.", color=RED)
+    typewriter("Alle vragen beantwoord")
+    typewriter("Wachtwoord is 9128")
+    time.sleep(7)
 
 main()
