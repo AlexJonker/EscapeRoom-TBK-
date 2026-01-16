@@ -1,12 +1,18 @@
 import time
 import sys
 
-def typewriter(text, delay=0.05):
+# ===== KLEUREN =====
+GREEN = "\033[92m"
+RED = "\033[91m"
+RESET = "\033[0m"
+
+def typewriter(text, delay=0.05, color=GREEN):
+    sys.stdout.write(color)
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()
         time.sleep(delay)
-    print()
+    sys.stdout.write(RESET + "\n")
 
 # ===== START WACHTWOORD (ONBEPERKT) =====
 while True:
@@ -14,65 +20,67 @@ while True:
     wachtwoord = input("> ")
 
     if wachtwoord == "1908":
-        typewriter("✅ Het wachtwoord is correct!\n")
+        typewriter("Het wachtwoord is correct!\n")
         break
     else:
-        typewriter("❌ Onjuist wachtwoord.\n")
+        typewriter("Onjuist wachtwoord.\n", color=RED)
 
 # ===== VRAGEN =====
 vragen = [
     {
         "vraag": "Vraag 1: Hoeveel meer radioactieve straling was er bij de superwolven dan wat volgens de menselijke veiligheidslimiet mag?",
-        "antwoord": "6 keer",
+        "antwoorden": ["6 keer", "6x", "zes keer"],
         "hint": "Het is een enkel cijfer, en best een klein getal."
     },
     {
         "vraag": "Vraag 2: Hoeveel ton woog de deksel die werd weggeblazen door de stoomexplosie?",
-        "antwoord": "1000 ton",
+        "antwoorden": ["1000 ton", "1000ton", "duizend ton"],
         "hint": "Het is in tonnen uitgedrukt, niet in kilo’s."
     },
     {
         "vraag": "Vraag 3: Welke naburige stad werd ook getroffen door de explosie van Tsjernobyl?",
-        "antwoord": "pripjat",
+        "antwoorden": ["pripjat", "pripyat"],
         "hint": "De stad ligt op korte afstand van de kerncentrale."
     },
     {
         "vraag": "Vraag 4: Hoe groot was de vervreemdingszone rond de kerncentrale?",
-        "antwoord": "30 km",
+        "antwoorden": ["30 km", "30km", "dertig km"],
         "hint": "Het aantal is kleiner dan 50, een mooi rond getal."
     }
 ]
 
-def vraag_stel(vraag, antwoord, hint):
+def vraag_stel(vraag, antwoorden, hint):
     fouten = 0
     typewriter("\n" + vraag)
+
+    antwoorden = [a.lower() for a in antwoorden]
 
     while True:
         respons = input("antwoord: ").strip().lower()
 
-        if respons == antwoord.lower():
+        if respons in antwoorden:
             typewriter("Correct! ✅")
-            return  # pas NU naar de volgende vraag
+            return
         else:
             fouten += 1
-            typewriter("❌ Fout antwoord.")
+            typewriter("Fout antwoord.", color=RED)
 
             if fouten == 3:
-                typewriter(f"💡 Hint: {hint}")
+                typewriter(f"Hint: {hint}")
 
 def main():
     for v in vragen:
-        vraag_stel(v["vraag"], v["antwoord"], v["hint"])
+        vraag_stel(v["vraag"], v["antwoorden"], v["hint"])
 
-    typewriter("\n🎯 Alle vragen beantwoord!")
+    typewriter("\nAlle vragen beantwoord!")
     typewriter("Voer het eindwachtwoord in:")
 
     while True:
         laatste = input("> ")
         if laatste == "9128":
-            typewriter("🎉 Eindwachtwoord correct! Je hebt het gehaald!", 0.06)
+            typewriter("Eindwachtwoord correct! Je hebt het gehaald!", 0.06)
             break
         else:
-            typewriter("❌ Fout eindwachtwoord. Probeer opnieuw.")
+            typewriter("Fout eindwachtwoord. Probeer opnieuw.", color=RED)
 
 main()
