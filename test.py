@@ -5,7 +5,20 @@ import os
 # ===== KLEUR =====
 RED = "\033[91m"
 RESET = "\033[0m"
-
+import time
+ 
+def mooie_progress_bar():
+    stappen = 50
+    bar_lengte = 30
+    print("Laden: ", end='', flush=True)
+    for i in range(stappen + 1):
+        percent = (i / stappen) * 100
+        blokjes = i * bar_lengte // stappen
+        bar = '█' * blokjes + '░' * (bar_lengte - blokjes)
+        print(f'\r[{bar}] {percent:.1f}%', end='', flush=True)
+        time.sleep(0.1)
+    print("\n Gevalideerd")
+ 
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -25,9 +38,9 @@ clear_screen()
 
 # ===== START WACHTWOORD (ONBEPERKT) =====
 while True:
-    typewriter("wachtwoord:", 0.07)
+    typewriter("Wachtwoord:", 0.07)
     wachtwoord = input("> ")
-
+    mooie_progress_bar()
     if wachtwoord == "1908":
         clear_screen()
         typewriter("Het wachtwoord is correct!\n")
@@ -66,7 +79,7 @@ def vraag_stel(vraag, antwoorden, hint):
     antwoorden = [a.lower() for a in antwoorden]
 
     while True:
-        respons = input("antwoord: ").strip().lower()
+        respons = input("Antwoord: ").strip().lower()
 
         if respons in antwoorden:
             clear_screen()
@@ -91,9 +104,9 @@ def main():
         laatste = input("> ")
         if laatste == "9128":
             clear_screen()
-            typewriter("Eindwachtwoord correct! Je hebt het gehaald!", 0.06)
+            typewriter("Wachtwoord correct", 0.06)
             break
         else:
-            typewriter("Fout eindwachtwoord. Probeer opnieuw.", color=RED)
+            typewriter("Onjuist wachtwoord.", color=RED)
 
 main()
