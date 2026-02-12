@@ -1,45 +1,53 @@
 import time
 import sys
 import os
+import termios
 
-# ===== KLEUR =====
 RED = "\033[91m"
 RESET = "\033[0m"
 
-# ===== INPUT LOCK =====
-input_toegestaan = True
+fd = sys.stdin.fileno()
+original_settings = termios.tcgetattr(fd)
+
+def disable_input():
+    new_settings = termios.tcgetattr(fd)
+    new_settings[3] &= ~termios.ECHO
+    new_settings[3] &= ~termios.ICANON
+    termios.tcsetattr(fd, termios.TCSADRAIN, new_settings)
+
+def enable_input():
+    termios.tcsetattr(fd, termios.TCSADRAIN, original_settings)
+
+disable_input()
 
 def veilige_input(prompt=""):
-    while not input_toegestaan:
-        time.sleep(0.05)
-    return input(prompt)
+    enable_input()
 
-# ===== CLEAR SCREEN =====
+    termios.tcflush(fd, termios.TCIFLUSH)
+
+    try:
+        return input(prompt)
+    finally:
+        disable_input()
+
 def clear_screen():
-    os.system("cls" if os.name == "nt" else "clear")
+    os.system("clear")
 
-# ===== TYPEWRITER =====
 def typewriter(text, delay=0.05, color=None):
-    global input_toegestaan
-    input_toegestaan = False
-
     if color:
         sys.stdout.write(color)
+
     for char in text:
         sys.stdout.write(char)
         sys.stdout.flush()
         time.sleep(delay)
+
     if color:
         sys.stdout.write(RESET)
+
     print()
 
-    input_toegestaan = True
-
-# ===== LOADING BAR =====
 def mooie_progress_bar():
-    global input_toegestaan
-    input_toegestaan = False
-
     stappen = 50
     bar_lengte = 30
     print("Laden: ", end='', flush=True)
@@ -52,12 +60,9 @@ def mooie_progress_bar():
         time.sleep(0.1)
 
     print("\n")
-    input_toegestaan = True
 
-# ===== START =====
 clear_screen()
 
-# ===== START WACHTWOORD =====
 while True:
     time.sleep(0.8)
     clear_screen()
@@ -72,7 +77,6 @@ while True:
     else:
         typewriter("Onjuist wachtwoord ❌\n", color=RED)
 
-# ===== VRAGEN =====
 vragen = [
     {
         "vraag": "Vraag 1: Hoeveel meer radioactieve straling was er bij de superwolven dan wat volgens de menselijke veiligheidslimiet mag?",
@@ -96,7 +100,7 @@ vragen = [
     },
     {
         "vraag": "Vraag 5: Zoek de letters met de blacklight en vorm een woord",
-        "antwoorden": ["Uranium"],
+        "antwoorden": ["uranium"],
         "hint": "De vierde letter is n."
     },
 ]
@@ -120,7 +124,6 @@ def vraag_stel(vraag, antwoorden, hint):
             if fouten == 3:
                 typewriter(f"Hint: {hint}")
 
-# ===== MAIN =====
 def main():
     for v in vragen:
         vraag_stel(v["vraag"], v["antwoorden"], v["hint"])
@@ -128,6 +131,8 @@ def main():
     clear_screen()
     typewriter("Alle vragen beantwoord")
     typewriter("Wachtwoord is 9128")
-    time.sleep(7)
+    time.sleep(15000)
+
+    enable_input()  # restore terminal before exit
 
 main()
