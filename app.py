@@ -5,7 +5,6 @@ import termios
 
 RED = "\033[91m"
 GREEN = "\033[92m"
-BLUE = "\033[94m"
 RESET = "\033[0m"
 
 fd = sys.stdin.fileno()
@@ -22,7 +21,7 @@ def enable_input():
 
 disable_input()
 
-def veilige_input(prompt="", color=BLUE):
+def veilige_input(prompt="", color=GREEN):
     enable_input()
 
     termios.tcflush(fd, termios.TCIFLUSH)
