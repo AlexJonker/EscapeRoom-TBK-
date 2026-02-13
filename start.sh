@@ -3,4 +3,4 @@
 trap '' INT
 stty -echoctl
 
-python3 test.py
+python3 app.py
