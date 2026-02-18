@@ -89,7 +89,7 @@ while True:
 vragen = [
     {
         "vraag": "Vraag 1: Hoeveel meer radioactieve straling was er bij de superwolven dan wat volgens de menselijke veiligheidslimiet mag?",
-        "antwoorden": ["6 keer", "6", "zes keer"],
+        "antwoorden": ["6 keer", "6", "zes keer", "zes"],
         "hint": "Het is een enkel cijfer, en best een klein getal."
     },
     {
@@ -143,5 +143,6 @@ def main():
     time.sleep(15000)
 
     enable_input()  # restore terminal before exit
+
 
 main()
