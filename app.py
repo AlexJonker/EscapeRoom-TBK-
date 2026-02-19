@@ -2,6 +2,8 @@ import time
 import sys
 import os
 import termios
+import shutil
+import textwrap
 
 RED = "\033[91m"
 GREEN = "\033[92m"
@@ -9,6 +11,10 @@ RESET = "\033[0m"
 
 fd = sys.stdin.fileno()
 original_settings = termios.tcgetattr(fd)
+
+def wrap_text(text):
+    width = shutil.get_terminal_size((80, 20)).columns
+    return textwrap.fill(text, width=width)
 
 def disable_input():
     new_settings = termios.tcgetattr(fd)
@@ -41,6 +47,8 @@ def clear_screen():
     os.system("clear")
 
 def typewriter(text, delay=0.05, color=GREEN):
+    text = wrap_text(text)
+
     if color:
         sys.stdout.write(color)
 
@@ -53,6 +61,7 @@ def typewriter(text, delay=0.05, color=GREEN):
         sys.stdout.write(RESET)
 
     print()
+
 
 def mooie_progress_bar():
     stappen = 50
@@ -81,10 +90,10 @@ while True:
 
     if wachtwoord == "120122":
         clear_screen()
-        typewriter("Wachtwoord is gevalideerd ✅\n")
+        typewriter("Wachtwoord is gevalideerd ✓\n")
         break
     else:
-        typewriter("Onjuist wachtwoord ❌\n", color=RED)
+        typewriter("Onjuist wachtwoord ✗\n", color=RED)
 
 vragen = [
     {
@@ -124,11 +133,11 @@ def vraag_stel(vraag, antwoorden, hint):
 
         if respons in antwoorden:
             clear_screen()
-            typewriter("Correct! ✅")
+            typewriter("Correct! ✓")
             return
         else:
             fouten += 1
-            typewriter("Fout antwoord ❌", color=RED)
+            typewriter("Fout antwoord ✗", color=RED)
 
             if fouten == 3:
                 typewriter(f"Hint: {hint}")
