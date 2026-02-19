@@ -2,6 +2,8 @@ import time
 import sys
 import os
 import termios
+import shutil
+import textwrap
 
 RED = "\033[91m"
 GREEN = "\033[92m"
@@ -9,6 +11,10 @@ RESET = "\033[0m"
 
 fd = sys.stdin.fileno()
 original_settings = termios.tcgetattr(fd)
+
+def wrap_text(text):
+    width = shutil.get_terminal_size((80, 20)).columns
+    return textwrap.fill(text, width=width)
 
 def disable_input():
     new_settings = termios.tcgetattr(fd)
@@ -41,6 +47,8 @@ def clear_screen():
     os.system("clear")
 
 def typewriter(text, delay=0.05, color=GREEN):
+    text = wrap_text(text)
+
     if color:
         sys.stdout.write(color)
 
@@ -53,6 +61,7 @@ def typewriter(text, delay=0.05, color=GREEN):
         sys.stdout.write(RESET)
 
     print()
+
 
 def mooie_progress_bar():
     stappen = 50
